@@ -1,5 +1,5 @@
-# Python 3.10-3.12 + Java 17 (JDK). Use um ambiente virtual.
-pyspark==3.5.3
+# Python 3.10-3.11 + Java 17 (JDK). Use um ambiente virtual.
+pyspark==3.5.3 #verificar a sua versão do pyhton, pois pode dar problemas
 jupyterlab
 pandas>=2.2.2
 pyarrow>=16.1.0
