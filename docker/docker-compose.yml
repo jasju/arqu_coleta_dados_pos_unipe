@@ -1,5 +1,6 @@
 # Só os SERVIÇOS. O Spark roda local, no Python do aluno (PySpark local[N]).
-#   MinIO (object storage) | Postgres + pgvector (serving + vetorial) | Metabase (BI)
+#   MinIO (object storage) | Postgres + pgvector (serving + vetorial) | Metabase (BI) atrás do Caddy (HTTPS)
+#   Metabase: https://localhost:3443  (certificado da CA local do Caddy; veja caddy/Caddyfile)
 # Subir:  docker compose up -d      Parar: docker compose down      Zerar tudo: docker compose down -v
 name: arqui_coleta_dados_unipe
 
@@ -41,16 +42,29 @@ services:
     mem_limit: 512m
 
   metabase:
-    image: metabase/metabase:v0.55.14.2
+    image: metabase/metabase:v0.65.x
     depends_on:
       postgres: {condition: service_healthy}
     environment:
       JAVA_OPTS: "-Xmx768m"
-    ports: ["3000:3000"]
+      MB_SITE_URL: https://localhost:3443   # links e redirecionamentos gerados pelo Metabase
+    expose: ["3000"]                        # só na rede interna; acesso externo via Caddy (HTTPS)
     volumes: [metabase_data:/metabase-data]
-    mem_limit: 1g
+    mem_limit: 5g
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on: [metabase]
+    ports: ["3443:3443"]
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data                    # CA local e certificados (persistem entre reinícios)
+      - caddy_config:/config
+    restart: unless-stopped
 
 volumes:
   minio_data:
   pg_data:
   metabase_data:
+  caddy_data:
+  caddy_config:

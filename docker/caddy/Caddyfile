@@ -1,0 +1,15 @@
+# Proxy HTTPS na frente do Metabase.
+# "tls internal": o Caddy gera uma CA local e um certificado para localhost.
+# O navegador vai avisar que o certificado não é confiável até você importar a CA:
+#   docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt ./caddy-root.crt
+# e instalar o caddy-root.crt como "Autoridade de certificação raiz confiável".
+{
+	# Não tenta instalar a CA no "sistema" do contêiner (não serve para o seu navegador)
+	skip_install_trust
+}
+
+https://localhost:3443 {
+	tls internal
+	encode gzip
+	reverse_proxy metabase:3000
+}

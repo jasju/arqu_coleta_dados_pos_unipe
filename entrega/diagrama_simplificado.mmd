@@ -1,0 +1,12 @@
+flowchart BT
+    SRC["Origem<br/>CSV / JSONL"] --> LAND["LANDING<br/>bucket landing<br/>arquivos crus"]
+    LAND --> BRZ["BRONZE<br/>bucket warehouse<br/>Iceberg, como veio"]
+    BRZ --> SLV["SILVER<br/>bucket warehouse<br/>Iceberg, limpo"]
+    BRZ -. "viola regra" .-> QUA["QUARENTENA"]
+    subgraph TOPO[" "]
+        direction LR
+        GLD["GOLD<br/>bucket warehouse<br/>Iceberg, gates OK"] --> PG["Postgres<br/>schema gold"]
+        PG -- "metabase_ro<br/>(só leitura)" --> MB["Metabase"]
+    end
+    SLV --> TOPO
+    QUA ~~~ TOPO

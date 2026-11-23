@@ -1,0 +1,26 @@
+Nesta atividade você vai entregar a , usando os notebooks 01_bronze, 02_silver e 03_gold (versão Spark ou versão pandas) e demais arquivos da sua estrutura. A entrega tem duas partes: a arquitetura desenhada e explicada, e as evidências de que ela funciona.
+
+PARTE 1:
+Faça um diagrama do fluxo completo, da origem ao Metabase, e explique cada etapa em um texto curto. O diagrama pode ser feito à mão, no draw.io, no Excalidraw ou em qualquer ferramenta. Ele deve mostrar:
+Onde cada camada fica (landing, Bronze, Silver, Gold) e em que bucket.
+O formato do dado em cada camada (CSV/JSONL, Iceberg ou Parquet, tabela no Postgres).
+Para onde vai o dado que viola uma regra (quarentena).
+Onde ficam o relatório de qualidade (DQ) e o contrato de dados.
+Quem escreve e quem só lê em cada etapa (usuário de administração e usuário somente leitura do Metabase).Além do diagrama, escreva respondendo: o que entra, o que sai e qual a regra principal.
+Dica: use sua ia generativa para gerar essas informações acima
+
+PARTE 2:
+Mostre que a sua arquitetura roda. Entregue os notebooks executados ou prints legíveis com as saídas de: a listagem de objetos da landing e do warehouse, e o experimento da “pasta” (prefixos e renomear).
+a contagem de linhas por tabela e a reexecução do mesmo lote sem duplicar (idempotência).
+o resumo da construção, a quarentena por origem e a reconciliação (entrada = silver + quarentena).
+o relatório do DQ e a tabela dq_resultados.
+o erro simulado (pedidos cancelados apagados) e a recuperação da versão anterior.
+a tabela de gates com todos os itens OK, as três tabelas publicadas e o contrato de dados.
+as tabelas gold no Postgres e uma pergunta de negócio respondida no Metabase (por exemplo, receita por dia).
+
+PARTE 3:
+Responda com suas palavras, citando exemplos do seu resultado:
+Qual regra da Silver mandou mais registros para a quarentena e por quê?
+Se a reconciliação não fechasse, o que você investigaria primeiro?
+Que dado pessoal existe na sua arquitetura e como ele foi tratado (mascarado, removido, restrito)?
+O que você mudaria nesta arquitetura se o volume de dados fosse 1.000 vezes maior?
